@@ -85,7 +85,7 @@ function HRnet_modal({
   fontFamily = "inherit",
   bodyClassName = "",
 
-  title = "Confirmation",
+  title = "Modal title",
   titleColor = "#111827",
   message = "",
   textColor = "#111827",

@@ -1,18 +1,21 @@
 {
   "name": "@delaroche/hrnet-modal",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Reusable customizable modal component for React",
-  "main": "dist/hrnet-modal.umd.cjs",
-  "module": "dist/hrnet-modal.js",
+  "type": "module",
+  "main": "./dist/hrnet-modal.umd.cjs",
+  "module": "./dist/hrnet-modal.js",
   "exports": {
     ".": {
       "import": "./dist/hrnet-modal.js",
       "require": "./dist/hrnet-modal.umd.cjs"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/hrnet-modal.css"
   },
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "README.md"
   ],
   "keywords": [
     "react",
@@ -25,7 +28,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DanickDela/hrnet-modal.git"
+    "url": "git+https://github.com/DanickDela/HRnet_modal.git"
   },
   "peerDependencies": {
     "react": ">=18",
@@ -39,12 +42,9 @@
     "prepublishOnly": "npm run build"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^6.0.1",
-    "sass-embedded": "^1.99.0",
-    "vite": "^8.0.10"
-  },
-  "bugs": {
-    "url": "https://github.com/DanickDela/hrnet-modal/issues"
-  },
-  "homepage": "https://github.com/DanickDela/hrnet-modal#readme"
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  }
 }
