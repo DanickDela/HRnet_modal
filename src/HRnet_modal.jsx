@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import styles from "./hrnet_modal.module.scss";
 /**
@@ -115,6 +115,8 @@ function HRnet_modal({
 
   confirmButtonType = "button",
 }) {
+  const modalRef = useRef(null);
+
   /**
    * Handles side effects when modal opens:
    * - locks page scroll
@@ -126,6 +128,9 @@ function HRnet_modal({
 
     // Save previous body overflow value
     const previousOverflow = document.body.style.overflow;
+
+    // Focus automatique sur la modale
+    modalRef.current?.focus();
 
     /**
      * Close modal when Escape key is pressed
@@ -209,7 +214,9 @@ function HRnet_modal({
           boxShadow,
           fontFamily,
         }}
+        ref={modalRef}
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-labelledby="modal-title"
         aria-describedby={message ? "modal-message" : undefined}

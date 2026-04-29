@@ -73,6 +73,7 @@ import "@delaroche/hrnet-modal/style.css";
 import { useState } from "react";
 import HRnet_modal from "@delaroche/hrnet-modal";
 import "@delaroche/hrnet-modal/style.css";
+import { Trash2, Check } from "lucide-react";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -87,7 +88,9 @@ function App() {
         title="Delete employee"
         message="Are you sure?"
         showCancelButton={true}
+        cancelIcon={<Check size={16} />}
         showConfirmButton={true}
+        confirmIcon={<Trash2 size={16} />}
         cancelText="Cancel"
         confirmText="Delete"
         onCancel={() => setIsOpen(false)}
@@ -237,21 +240,30 @@ import { Trash2, Check } from "lucide-react";
 
 ## Example Advanced Usage
 
-```jsx
-<HRnet_modal
-  isOpen={open}
-  onClose={() => setOpen(false)}
-  title="Delete employee"
-  message="This action cannot be undone"
-  showCancelButton={true}
-  cancelIcon={<Check size={16} />}
-  showConfirmButton={true}
-  confirmIcon={<Trash2 size={16} />}
-  confirmText="Delete"
-  confirmButtonColor="#dc2626"
-  cancelText="Keep"
-/>
-```
+````jsx id="dsvmiv"
+import { useState } from "react";
+import HRnet_modal from "@delaroche/hrnet-modal";
+import { Trash2, Check } from "lucide-react";
+
+function App() {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <HRnet_modal
+      isOpen={open}
+      onClose={() => setOpen(false)}
+      title="Delete employee"
+      message="This action cannot be undone"
+      showCancelButton={true}
+      cancelIcon={<Check size={16} />}
+      showConfirmButton={true}
+      confirmIcon={<Trash2 size={16} />}
+      confirmText="Delete"
+      confirmButtonColor="#dc2626"
+      cancelText="Keep"
+    />
+  );
+}
 
 ---
 
@@ -275,7 +287,7 @@ Pull requests and suggestions are welcome.
 
 ```bash
 npm view @delaroche/hrnet-modal
-```
+````
 
 ---
 
