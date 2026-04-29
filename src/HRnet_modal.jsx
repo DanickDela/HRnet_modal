@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./hrnet_modal.module.scss";
 /**
@@ -47,6 +47,8 @@ import styles from "./hrnet_modal.module.scss";
  * @param {string} [props.confirmText="Confirm"] - Text displayed inside the confirm button.
  * @param {"button"|"submit"|"reset"} [props.confirmButtonType="button"] - Native HTML type of the confirm button.
  *
+ * @param {boolean} [props.showDragHandle=true] - Displays a decorative iOS-style drag handle on mobile.
+ *
  * @param {string|number} [props.fontSize="1rem"] - Font size applied to the modal container.
  * @param {string} [props.backgroundColor="#ffffff"] - Background color of the modal container.
  * @param {string} [props.textColor="#111827"] - Main text color of the modal.
@@ -72,7 +74,7 @@ import styles from "./hrnet_modal.module.scss";
 function HRnet_modal({
   isOpen,
 
-  overlayColor = "rgba(0, 0, 0, 0.55)",
+  overlayColor = "rgba(0, 0, 0, 0.25)",
   overlayClassName = "",
   className = "",
   width = "520px",
@@ -113,13 +115,17 @@ function HRnet_modal({
   confirmButtonTextColor = "#ffffff",
   confirmButtonClassName = "",
 
+  showDragHandle = true,
+
   confirmButtonType = "button",
 }) {
   const modalRef = useRef(null);
   const closeButtonRef = useRef(null);
   const cancelButtonRef = useRef(null);
   const confirmButtonRef = useRef(null);
-
+  const startY = useRef(0);
+  const currentY = useRef(0);
+  const [dragY, setDragY] = useState(0);
   /**
    * Handles side effects when modal opens:
    * - locks page scroll
@@ -198,7 +204,27 @@ function HRnet_modal({
       onClose();
     }
   }
+  function handleTouchStart(e) {
+    startY.current = e.touches[0].clientY;
+  }
 
+  function handleTouchMove(e) {
+    currentY.current = e.touches[0].clientY;
+
+    const diff = currentY.current - startY.current;
+
+    if (diff > 0) {
+      setDragY(diff);
+    }
+  }
+
+  function handleTouchEnd() {
+    if (dragY > 120) {
+      onClose(); // ferme la modale
+    } else {
+      setDragY(0); // revient en place
+    }
+  }
   return (
     /**
      * Overlay background
@@ -220,6 +246,9 @@ function HRnet_modal({
           borderRadius,
           boxShadow,
           fontFamily,
+
+          transform: `translateY(${dragY}px)`,
+          transition: dragY === 0 ? "transform 0.25s ease" : "none",
         }}
         ref={modalRef}
         role="dialog"
@@ -228,6 +257,16 @@ function HRnet_modal({
         aria-labelledby="modal-title"
         aria-describedby={message ? "modal-message" : undefined}
       >
+        {/* Decorative drag handle */}
+        {showDragHandle && (
+          <span
+            className={styles.modal__dragHandle}
+            aria-hidden="true"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          />
+        )}
         {/* Optional close button */}
         {showCloseIcon && (
           <button
@@ -336,6 +375,7 @@ HRnet_modal.propTypes = {
   showCloseIcon: PropTypes.bool,
   showCancelButton: PropTypes.bool,
   showConfirmButton: PropTypes.bool,
+  showDragHandle: PropTypes.bool,
 
   closeIcon: PropTypes.node,
   cancelIcon: PropTypes.node,
