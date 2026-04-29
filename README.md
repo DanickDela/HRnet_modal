@@ -260,6 +260,14 @@ function App() {
 
 ---
 
+## Changelog
+
+See full release history here:
+
+[CHANGELOG.md](./CHANGELOG.md)
+
+---
+
 ## Contributing
 
 Pull requests and suggestions are welcome.
