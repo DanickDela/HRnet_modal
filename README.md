@@ -169,25 +169,6 @@ export default App;
 
 ---
 
-## Main Props
-
-| Prop              | Type     | Default      | Description         |
-| ----------------- | -------- | ------------ | ------------------- |
-| isOpen            | boolean  | required     | Open / close modal  |
-| onClose           | function | required     | Close callback      |
-| title             | string   | Confirmation | Modal title         |
-| message           | string   | ""           | Message text        |
-| children          | node     | null         | Custom content      |
-| showCloseIcon     | boolean  | false        | Show close button   |
-| showCancelButton  | boolean  | false        | Show cancel button  |
-| showConfirmButton | boolean  | false        | Show confirm button |
-| cancelText        | string   | Cancel       | Cancel label        |
-| confirmText       | string   | Confirm      | Confirm label       |
-| onCancel          | function | optional     | Cancel callback     |
-| onConfirm         | function | optional     | Confirm callback    |
-
----
-
 ## Styling Props
 
 You can customize:
@@ -222,6 +203,7 @@ Includes:
 
 - `role="dialog"`
 - `aria-modal="true"`
+- automatic focus on open
 - Escape key closing
 - overlay close support
 
@@ -238,9 +220,68 @@ import { Trash2, Check } from "lucide-react";
 
 ---
 
+## Basic Example
+
+```jsx
+import { useState } from "react";
+import HRnet_modal from "@delaroche/hrnet-modal";
+import "@delaroche/hrnet-modal/style.css";
+import { Trash2, Check } from "lucide-react";
+
+function App() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Open modal</button>
+
+      <HRnet_modal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Delete employee"
+        message="Are you sure?"
+        showCancelButton={true}
+        cancelIcon={<Check size={16} />}
+        showConfirmButton={true}
+        confirmIcon={<Trash2 size={16} />}
+        cancelText="Cancel"
+        confirmText="Delete"
+        onCancel={() => setIsOpen(false)}
+        onConfirm={() => alert("Deleted")}
+      />
+    </>
+  );
+}
+
+export default App;
+```
+
+---
+
+## Example With Children
+
+```jsx
+<HRnet_modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Employee details"
+  showCloseIcon={true}
+>
+  <div>
+    <label>First name</label>
+    <input type="text" />
+
+    <label>Last name</label>
+    <input type="text" />
+  </div>
+</HRnet_modal>
+```
+
+---
+
 ## Example Advanced Usage
 
-```jsx id="dsvmiv"
+```jsx
 import { useState } from "react";
 import HRnet_modal from "@delaroche/hrnet-modal";
 import { Trash2, Check } from "lucide-react";
