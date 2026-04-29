@@ -116,6 +116,9 @@ function HRnet_modal({
   confirmButtonType = "button",
 }) {
   const modalRef = useRef(null);
+  const closeButtonRef = useRef(null);
+  const cancelButtonRef = useRef(null);
+  const confirmButtonRef = useRef(null);
 
   /**
    * Handles side effects when modal opens:
@@ -130,8 +133,12 @@ function HRnet_modal({
     const previousOverflow = document.body.style.overflow;
 
     // Focus automatique sur la modale
-    modalRef.current?.focus();
-
+    requestAnimationFrame(() => {
+      closeButtonRef.current?.focus() ||
+        cancelButtonRef.current?.focus() ||
+        confirmButtonRef.current?.focus() ||
+        modalRef.current?.focus();
+    });
     /**
      * Close modal when Escape key is pressed
      */
@@ -224,6 +231,7 @@ function HRnet_modal({
         {/* Optional close button */}
         {showCloseIcon && (
           <button
+            ref={closeButtonRef}
             type="button"
             className={`${styles.modal__close} ${closeButtonClassName}`}
             onClick={onClose}
@@ -265,6 +273,7 @@ function HRnet_modal({
               {/* Cancel button */}
               {showCancelButton && (
                 <button
+                  ref={cancelButtonRef}
                   type="button"
                   className={`${styles.modal__button} ${styles.modal__button_cancel} ${cancelButtonClassName}`}
                   onClick={handleCancel}
@@ -285,6 +294,7 @@ function HRnet_modal({
               {/* Confirm button */}
               {showConfirmButton && (
                 <button
+                  ref={confirmButtonRef}
                   type={confirmButtonType}
                   className={`${styles.modal__button} ${styles.modal__button_confirm} ${confirmButtonClassName}`}
                   onClick={handleConfirm}

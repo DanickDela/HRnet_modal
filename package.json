@@ -1,6 +1,6 @@
 {
   "name": "@delaroche/hrnet-modal",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Reusable customizable modal component for React",
   "type": "module",
   "main": "./dist/hrnet-modal.umd.cjs",
