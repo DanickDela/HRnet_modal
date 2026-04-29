@@ -240,7 +240,7 @@ import { Trash2, Check } from "lucide-react";
 
 ## Example Advanced Usage
 
-````jsx id="dsvmiv"
+```jsx id="dsvmiv"
 import { useState } from "react";
 import HRnet_modal from "@delaroche/hrnet-modal";
 import { Trash2, Check } from "lucide-react";
@@ -264,6 +264,7 @@ function App() {
     />
   );
 }
+```
 
 ---
 
@@ -287,7 +288,7 @@ Pull requests and suggestions are welcome.
 
 ```bash
 npm view @delaroche/hrnet-modal
-````
+```
 
 ---
 
