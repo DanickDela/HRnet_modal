@@ -124,8 +124,11 @@ function HRnet_modal({
   const cancelButtonRef = useRef(null);
   const confirmButtonRef = useRef(null);
   const startY = useRef(0);
-  const currentY = useRef(0);
+  const dragValue = useRef(0);
+
   const [dragY, setDragY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   /**
    * Handles side effects when modal opens:
    * - locks page scroll
@@ -204,27 +207,50 @@ function HRnet_modal({
       onClose();
     }
   }
-  function handleTouchStart(e) {
-    startY.current = e.touches[0].clientY;
+
+  function handlePointerStart(event) {
+    startY.current = event.clientY;
+    dragValue.current = 0;
+    setIsDragging(true);
+
+    event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
-  function handleTouchMove(e) {
-    currentY.current = e.touches[0].clientY;
+  function handlePointerMove(event) {
+    if (!isDragging) return;
 
-    const diff = currentY.current - startY.current;
+    const diff = event.clientY - startY.current;
 
     if (diff > 0) {
+      dragValue.current = diff;
       setDragY(diff);
     }
   }
 
-  function handleTouchEnd() {
-    if (dragY > 120) {
-      onClose(); // ferme la modale
-    } else {
-      setDragY(0); // revient en place
-    }
+  function closeWithAnimation() {
+    setIsClosing(true);
+    setDragY(window.innerHeight);
+
+    setTimeout(() => {
+      setIsClosing(false);
+      setDragY(0);
+      onClose();
+    }, 320);
   }
+
+  function handlePointerEnd(event) {
+    setIsDragging(false);
+
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+
+    if (dragValue.current > 90) {
+      closeWithAnimation();
+      return;
+    }
+
+    setDragY(0);
+  }
+
   return (
     /**
      * Overlay background
@@ -238,17 +264,19 @@ function HRnet_modal({
       <div
         className={`${styles.modal__container} ${className}`}
         style={{
-          width,
-          maxHeight,
+          "--modal-width": typeof width === "number" ? `${width}px` : width,
+          "--modal-max-height":
+            typeof maxHeight === "number" ? `${maxHeight}px` : maxHeight,
           fontSize,
           backgroundColor,
           color: textColor,
           borderRadius,
           boxShadow,
           fontFamily,
-
           transform: `translateY(${dragY}px)`,
-          transition: dragY === 0 ? "transform 0.25s ease" : "none",
+          transition: isDragging
+            ? "none"
+            : "transform 0.32s cubic-bezier(0.32, 0.72, 0, 1)",
         }}
         ref={modalRef}
         role="dialog"
@@ -262,9 +290,10 @@ function HRnet_modal({
           <span
             className={styles.modal__dragHandle}
             aria-hidden="true"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
+            onPointerDown={handlePointerStart}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerEnd}
+            onPointerCancel={handlePointerEnd}
           />
         )}
         {/* Optional close button */}

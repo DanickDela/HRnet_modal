@@ -1,6 +1,6 @@
 {
   "name": "@delaroche/hrnet-modal",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Reusable customizable modal component for React",
   "type": "module",
   "main": "./dist/hrnet-modal.umd.cjs",
@@ -36,6 +36,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
+    "alert": "^6.0.2",
     "prop-types": "^15.8.1"
   },
   "scripts": {
@@ -44,8 +45,8 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "vite": "latest"
   }
 }
