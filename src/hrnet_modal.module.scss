@@ -1,7 +1,14 @@
 .modal {
   /**
    * Full-screen overlay displayed behind the modal.
-   * It centers the modal on desktop and blocks interaction with the page.
+   *
+   * Responsibilities:
+   * - covers the entire viewport
+   * - blocks interaction with background content
+   * - centers the modal on desktop layouts
+   * - receives optional overlay color through inline styles
+   *
+   * Commonly uses `position: fixed`, but can be overridden by props.
    */
   &__overlay {
     box-sizing: border-box;

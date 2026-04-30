@@ -241,3 +241,9 @@ Includes:
 ## License
 
 MIT
+
+## Changelog
+
+See full release history here:
+
+[CHANGELOG.md](./CHANGELOG.md)

@@ -2,73 +2,161 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./hrnet_modal.module.scss";
 /**
- * Reusable modal component for confirmation dialogs, alerts, forms or custom content.
+ * Reusable modal component used to display confirmations,
+ * alerts, forms, or any custom content.
  *
- * The component supports:
+ * The modal supports:
  * - conditional rendering through `isOpen`
  * - closing with the Escape key
- * - closing by clicking on the overlay
- * - optional close icon
- * - optional cancel and confirm actions
- * - custom icons for buttons
- * - custom children content
- * - inline customization for size, colors, typography and shadow
+ * - closing when clicking on the overlay
+ * - background scroll locking while open
+ * - automatic focus management on open
+ * - optional close button
+ * - optional cancel and confirm buttons
+ * - custom icons inside buttons
+ * - custom body content through `children`
+ * - mobile bottom-sheet mode with drag handle
+ * - swipe / drag to close on supported devices
+ * - visual customization through props and CSS classes
  *
  * @component
  *
- * @param {Object} props - Component props.
+ * @param {Object} props - Component properties.
  *
- * @param {boolean} props.isOpen - Determines whether the modal is rendered.
+ * @param {boolean} props.isOpen
+ * Controls modal visibility.
+ * When `false`, the component returns `null`.
  *
- * @param {string} [props.overlayClassName=""] - Additional CSS class applied to the overlay.
- * @param {string|number} [props.width="520px"] - Width of the modal container.
- * @param {string|number} [props.maxHeight="85vh"] - Maximum height of the modal container.
- * @param {string|number} [props.borderRadius="20px"] - Border radius of the modal container.
+ * @param {Function} props.onClose
+ * Callback triggered to close the modal.
+ * Fired when clicking the overlay, pressing Escape,
+ * clicking the close button, or after certain actions.
  *
- * @param {string} [props.title="Confirmation"] - Modal title displayed in the heading.
- * @param {string} [props.message=""] - Optional message displayed below the title.
- * @param {React.ReactNode} [props.children] - Custom content rendered inside the modal body.
+ * @param {Function} [props.onCancel]
+ * Optional callback executed before closing
+ * when the cancel button is clicked.
  *
- * @param {Function} [props.onCancel] - Callback executed when the cancel button is clicked.
- * @param {Function} [props.onConfirm] - Callback executed when the confirm button is clicked.
- * @param {Function} props.onClose - Callback used to close the modal.
+ * @param {Function} [props.onConfirm]
+ * Optional callback executed before closing
+ * when the confirm button is clicked.
+ * Called only when `confirmButtonType` is `"button"`.
  *
- * @param {boolean} [props.showCloseIcon=false] - Displays the close button when true.
- * @param {string} [props.closeButtonClassName=""] - Additional CSS class applied to the close button.
- * @param {React.ReactNode} [props.closeIcon=null] - Custom icon displayed inside the close button.
+ * @param {string} [props.title="Modal title"]
+ * Main heading displayed in the modal.
  *
- * @param {boolean} [props.showCancelButton=false] - Displays the cancel button when true.
- * @param {boolean} [props.showConfirmButton=false] - Displays the confirm button when true.
+ * @param {string} [props.message=""]
+ * Optional text displayed below the title.
+ * If provided, it is linked through `aria-describedby`.
  *
- * @param {React.ReactNode} [props.cancelIcon=null] - Optional icon displayed before the cancel button text.
- * @param {React.ReactNode} [props.confirmIcon=null] - Optional icon displayed before the confirm button text.
+ * @param {React.ReactNode} [props.children]
+ * Custom content rendered inside the modal body.
  *
- * @param {string} [props.cancelText="Cancel"] - Text displayed inside the cancel button.
- * @param {string} [props.confirmText="Confirm"] - Text displayed inside the confirm button.
- * @param {"button"|"submit"|"reset"} [props.confirmButtonType="button"] - Native HTML type of the confirm button.
+ * @param {string} [props.overlayClassName=""]
+ * Additional CSS class applied to the overlay.
  *
- * @param {boolean} [props.showDragHandle=true] - Displays a decorative iOS-style drag handle on mobile.
+ * @param {"fixed"|"absolute"} [props.overlayPosition="fixed"]
+ * CSS position used for the overlay container.
  *
- * @param {string|number} [props.fontSize="1rem"] - Font size applied to the modal container.
- * @param {string} [props.backgroundColor="#ffffff"] - Background color of the modal container.
- * @param {string} [props.textColor="#111827"] - Main text color of the modal.
- * @param {string} [props.titleColor="#111827"] - Color applied to the title.
- * @param {string} [props.overlayColor="rgba(0, 0, 0, 0.55)"] - Background color of the overlay.
+ * @param {"modal"|"bottom-sheet"} [props.mobileMode="bottom-sheet"]
+ * Mobile display mode.
+ * `"bottom-sheet"` renders the modal as a sliding panel from the bottom.
  *
- * @param {string} [props.confirmButtonColor="#2563eb"] - Background color of the confirm button.
- * @param {string} [props.cancelButtonColor="#e5e7eb"] - Background color of the cancel button.
- * @param {string} [props.confirmButtonTextColor="#ffffff"] - Text color of the confirm button.
- * @param {string} [props.cancelButtonTextColor="#111827"] - Text color of the cancel button.
+ * @param {string} [props.className=""]
+ * Additional CSS class applied to the modal container.
  *
- * @param {string} [props.boxShadow="0 12px 40px rgba(0, 0, 0, 0.2)"] - Box shadow applied to the modal container.
- * @param {string} [props.fontFamily="inherit"] - Font family used inside the modal.
+ * @param {string} [props.bodyClassName=""]
+ * Additional CSS class applied to the modal body.
  *
- * @param {string} [props.className=""] - Additional CSS class applied to the modal container.
- * @param {string} [props.bodyClassName=""] - Additional CSS class applied to the modal body.
- * @param {string} [props.confirmButtonClassName=""] - Additional CSS class applied to the confirm button.
- * @param {string} [props.cancelButtonClassName=""] - Additional CSS class applied to the cancel button.
+ * @param {string|number} [props.width="520px"]
+ * Modal width.
+ * Numeric values are converted to pixels.
  *
- * @returns {JSX.Element|null} The modal element when open, otherwise `null`.
+ * @param {string|number} [props.maxHeight="85vh"]
+ * Maximum modal height.
+ * Numeric values are converted to pixels.
+ *
+ * @param {string|number} [props.borderRadius="20px"]
+ * Border radius applied to the modal container.
+ *
+ * @param {string|number} [props.fontSize="1rem"]
+ * Base font size applied to the modal.
+ *
+ * @param {string} [props.backgroundColor="#ffffff"]
+ * Background color of the modal container.
+ *
+ * @param {string} [props.textColor="#111827"]
+ * Main text color and close button color.
+ *
+ * @param {string} [props.titleColor="#111827"]
+ * Color applied to the title heading.
+ *
+ * @param {string} [props.overlayColor="rgba(0, 0, 0, 0.25)"]
+ * Background color of the overlay.
+ *
+ * @param {string} [props.boxShadow="0 12px 40px rgba(0, 0, 0, 0.2)"]
+ * Box shadow applied to the modal container.
+ *
+ * @param {string} [props.fontFamily="inherit"]
+ * Font family used inside the modal.
+ *
+ * @param {boolean} [props.showCloseIcon=false]
+ * Displays the close button when `true`.
+ *
+ * @param {string} [props.closeButtonClassName=""]
+ * Additional CSS class applied to the close button.
+ *
+ * @param {React.ReactNode} [props.closeIcon=null]
+ * Custom icon rendered inside the close button.
+ * Defaults to `×`.
+ *
+ * @param {boolean} [props.showCancelButton=false]
+ * Displays the cancel button when `true`.
+ *
+ * @param {React.ReactNode} [props.cancelIcon=null]
+ * Optional icon displayed before cancel text.
+ *
+ * @param {string} [props.cancelText="Cancel"]
+ * Text displayed inside the cancel button.
+ *
+ * @param {string} [props.cancelButtonColor="#e5e7eb"]
+ * Background color of the cancel button.
+ *
+ * @param {string} [props.cancelButtonTextColor="#111827"]
+ * Text color of the cancel button.
+ *
+ * @param {string} [props.cancelButtonClassName=""]
+ * Additional CSS class applied to the cancel button.
+ *
+ * @param {boolean} [props.showConfirmButton=false]
+ * Displays the confirm button when `true`.
+ *
+ * @param {React.ReactNode} [props.confirmIcon=null]
+ * Optional icon displayed before confirm text.
+ *
+ * @param {string} [props.confirmText="Confirm"]
+ * Text displayed inside the confirm button.
+ *
+ * @param {"button"|"submit"|"reset"} [props.confirmButtonType="button"]
+ * Native HTML button type.
+ *
+ * If set to `"submit"`, form submission
+ * should be handled externally.
+ *
+ * @param {string} [props.confirmButtonColor="#2563eb"]
+ * Background color of the confirm button.
+ *
+ * @param {string} [props.confirmButtonTextColor="#ffffff"]
+ * Text color of the confirm button.
+ *
+ * @param {string} [props.confirmButtonClassName=""]
+ * Additional CSS class applied to the confirm button.
+ *
+ * @param {boolean} [props.showDragHandle=true]
+ * Displays a decorative drag handle in `"bottom-sheet"` mode.
+ * Can also be used for swipe-down closing interaction.
+ *
+ * @returns {JSX.Element|null}
+ * The modal element when open, otherwise `null`.
  */
 
 function HRnet_modal({
