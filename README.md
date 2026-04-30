@@ -1,52 +1,28 @@
-@delaroche/hrnet-modal
+# HRnet Modal
 
-![npm version](https://img.shields.io/npm/v/@delaroche/hrnet-modal)
-![license](https://img.shields.io/npm/l/@delaroche/hrnet-modal)
-![downloads](https://img.shields.io/npm/dm/@delaroche/hrnet-modal)
-![react](https://img.shields.io/badge/React-18%2B-blue)
-![mobile](https://img.shields.io/badge/Mobile-Friendly-success)
+A reusable and customizable React modal component for alerts, confirmation dialogs, forms, and custom content.
 
-Reusable, customizable and responsive modal component for React.
-
-Designed for modern React applications with:
-
-- clean UI
-- mobile friendly bottom sheet mode
-- customizable buttons
-- icons support
-- overlay click close
-- Escape key close
-- flexible children content
-- SCSS styling included
+The component supports desktop and mobile modals, mobile bottom sheets, swipe-to-close gestures, custom icons, styling props, and accessibility-friendly behavior.
 
 ---
 
-## Why choose HRnet Modal
+## Features
 
-HRnet Modal is built for developers who want a clean, modern and production-ready modal without unnecessary complexity.
-
-### Highlights
-
-- Lightweight and reusable
-- Elegant desktop modal UI
-- Native iPhone-style mobile bottom sheet
-- Fully customizable colors, texts and buttons
-- Children support for forms and custom JSX
-- Overlay click close + Escape key close
-- React 18+ compatible
-- Easy integration with Vite / CRA / Next.js
-
----
-
-## Preview
-
-### Desktop
-
-Centered elegant modal with smooth animation.
-
-### Mobile
-
-Full-width bottom sheet inspired by iOS.
+- Reusable React modal component
+- Desktop centered modal
+- Mobile bottom sheet mode
+- selection of bottom sheet mode or modal mode for mobile
+- Optional iOS-style drag handle
+- Swipe down to close on mobile bottom sheet
+- Close on overlay click
+- Close with Escape key
+- Optional close icon
+- Optional cancel and confirm buttons
+- Custom icons for action buttons
+- Custom content with `children`
+- Custom colors, width, border radius, font, and shadow
+- Scroll lock while modal is open
+- Accessibility support
 
 ---
 
@@ -67,7 +43,7 @@ import "@delaroche/hrnet-modal/style.css";
 
 ---
 
-## Basic Example
+## Basic Usage
 
 ```jsx
 import { useState } from "react";
@@ -105,95 +81,147 @@ export default App;
 
 ---
 
-## Example With Children
+## Confirmation Example
+
+```jsx
+<HRnet_modal
+  isOpen={isOpen}
+  title="Delete Employee"
+  message="Are you sure?"
+  onClose={() => setIsOpen(false)}
+  onCancel={() => setIsOpen(false)}
+  onConfirm={handleDelete}
+  showCancelButton
+  showConfirmButton
+  cancelText="Cancel"
+  confirmText="Delete"
+  confirmButtonColor="#dc2626"
+/>
+```
+
+---
+
+## Mobile Modes
+
+### Bottom Sheet (default)
 
 ```jsx
 <HRnet_modal
   isOpen={isOpen}
   onClose={() => setIsOpen(false)}
-  title="Employee details"
-  showCloseIcon={true}
->
-  <div>
-    <label>First name</label>
-    <input type="text" />
+  mobileMode="bottom-sheet"
+/>
+```
 
-    <label>Last name</label>
-    <input type="text" />
-  </div>
+### Centered Modal
+
+```jsx
+<HRnet_modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  mobileMode="modal"
+/>
+```
+
+When using `mobileMode="modal"`, the drag handle is automatically hidden.
+
+---
+
+## Overlay Position
+
+### Fixed (default)
+
+Covers the full screen.
+
+```jsx
+overlayPosition = "fixed";
+```
+
+### Absolute
+
+Useful if you only want to cover a parent container such as `<main>`.
+
+```jsx
+overlayPosition = "absolute";
+```
+
+Parent element must have:
+
+```css
+.main {
+  position: relative;
+}
+```
+
+---
+
+## Custom Icons
+
+```jsx
+import { X, Trash2 } from "lucide-react";
+
+<HRnet_modal
+  isOpen={isOpen}
+  showCloseIcon
+  closeIcon={<X size={22} />}
+  confirmIcon={<Trash2 size={16} />}
+/>;
+```
+
+---
+
+## Custom Content
+
+```jsx
+<HRnet_modal
+  isOpen={isOpen}
+  title="Custom Form"
+  onClose={() => setIsOpen(false)}
+>
+  <form>
+    <input type="text" placeholder="Your name" />
+    <button type="submit">Save</button>
+  </form>
 </HRnet_modal>
 ```
 
 ---
 
-## Full Props Reference
+## Props
 
-| Prop                   | Type           | Default               | Description                 |
-| ---------------------- | -------------- | --------------------- | --------------------------- |
-| isOpen                 | boolean        | required              | Controls modal visibility   |
-| onClose                | function       | required              | Triggered when modal closes |
-| title                  | string         | Modal title           | Modal title                 |
-| message                | string         | ""                    | Informational text          |
-| children               | node           | null                  | Custom JSX content          |
-| showCloseIcon          | boolean        | false                 | Display top close button    |
-| showCancelButton       | boolean        | false                 | Display cancel button       |
-| showConfirmButton      | boolean        | false                 | Display confirm button      |
-| closeIcon              | node           | ×                     | Custom close icon           |
-| cancelIcon             | node           | null                  | Icon before cancel label    |
-| confirmIcon            | node           | null                  | Icon before confirm label   |
-| cancelText             | string         | Cancel                | Cancel button label         |
-| confirmText            | string         | Confirm               | Confirm button label        |
-| onCancel               | function       | optional              | Cancel callback             |
-| onConfirm              | function       | optional              | Confirm callback            |
-| confirmButtonType      | string         | button                | HTML button type            |
-| width                  | string\|number | 520px                 | Modal width                 |
-| maxHeight              | string\|number | 85vh                  | Max modal height            |
-| borderRadius           | string\|number | 20px                  | Modal border radius         |
-| fontSize               | string\|number | 1rem                  | Base font size              |
-| fontFamily             | string         | inherit               | Font family                 |
-| backgroundColor        | string         | #ffffff               | Modal background            |
-| textColor              | string         | #111827               | Main text color             |
-| titleColor             | string         | #111827               | Title color                 |
-| overlayColor           | string         | rgba(...)             | Overlay color               |
-| confirmButtonColor     | string         | #2563eb               | Confirm button color        |
-| cancelButtonColor      | string         | #e5e7eb               | Cancel button color         |
-| confirmButtonTextColor | string         | #ffffff               | Confirm text color          |
-| cancelButtonTextColor  | string         | #111827               | Cancel text color           |
-| boxShadow              | string         | 0 12px 40px rgba(...) | Modal shadow                |
-| className              | string         | ""                    | Extra modal class           |
-| overlayClassName       | string         | ""                    | Extra overlay class         |
-| bodyClassName          | string         | ""                    | Extra body class            |
-| closeButtonClassName   | string         | ""                    | Extra close button class    |
-| confirmButtonClassName | string         | ""                    | Extra confirm button class  |
-| cancelButtonClassName  | string         | ""                    | Extra cancel button class   |
-
----
-
-## Styling Props
-
-You can customize:
-
-- width
-- maxHeight
-- borderRadius
-- backgroundColor
-- textColor
-- titleColor
-- overlayColor
-- confirmButtonColor
-- cancelButtonColor
-- fontFamily
-- boxShadow
-
----
-
-## Mobile UX
-
-On mobile devices:
-
-- full width modal
-- bottom sheet animation
-- native iPhone inspired design
+| Prop                   | Type            | Default      | Description                 |
+| ---------------------- | --------------- | ------------ | --------------------------- |
+| isOpen                 | boolean         | required     | Controls modal visibility   |
+| onClose                | function        | required     | Close callback              |
+| title                  | string          | Modal title  | Title text                  |
+| message                | string          | ""           | Optional message            |
+| children               | node            | null         | Custom content              |
+| showCloseIcon          | boolean         | false        | Show close button           |
+| showCancelButton       | boolean         | false        | Show cancel button          |
+| showConfirmButton      | boolean         | false        | Show confirm button         |
+| closeIcon              | node            | X            | Custom close Icon           |
+| cancelIcon             | node            | null         | Icon before cancel label    |
+| confirmIcon            | node            | null         | Icon before confirm label   |
+| onCancel               | function        | optional     | Cancel callback             |
+| onConfirm              | function        | optional     | Confirm callback            |
+| cancelText             | string          | Cancel       | Cancel button text          |
+| confirmText            | string          | Confirm      | Confirm button text         |
+| mobileMode             | string          | bottom-sheet | modal / bottom-sheet        |
+| overlayPosition        | string          | fixed        | fixed / absolute            |
+| width                  | string / number | 520px        | Modal width                 |
+| maxHeight              | string / number | 85vh         | Max height                  |
+| borderRadius           | string / number | 20px         | Radius                      |
+| backgroundColor        | string          | #ffffff      | Background                  |
+| textColor              | string          | #111827      | Text color                  |
+| titleColor             | string          | #111827      | Title color                 |
+| overlayColor           | string          | rgba(...)    | Overlay color               |
+| fontFamily             | string          | inherit      | Font family                 |
+| className              | string          | ""           | Custom modal class          |
+| overlayClassName       | string          | ""           | Custom overlay class        |
+| bodyClassName          | string          | ""           | Custom body class           |
+| confirmButtonClassName | string          | ""           | Custom confirm button class |
+| cancelButtonClassName  | string          | ""           | Custom cancel button class  |
+| closeButtonClassName   | string          | ""           | Custom close button class   |
 
 ---
 
@@ -203,88 +231,10 @@ Includes:
 
 - `role="dialog"`
 - `aria-modal="true"`
-- automatic focus on open
+- `aria-labelledby`
+- `aria-describedby`
 - Escape key closing
-- overlay close support
-
----
-
-## TypeScript Support
-
-Works perfectly in TypeScript React projects.
-
-```tsx
-import HRnet_modal from "@delaroche/hrnet-modal";
-import { Trash2, Check } from "lucide-react";
-```
-
----
-
-## Example Advanced Usage
-
-```jsx
-import { useState } from "react";
-import HRnet_modal from "@delaroche/hrnet-modal";
-import { Trash2, Check } from "lucide-react";
-
-function App() {
-  const [open, setOpen] = useState(true);
-
-  return (
-    <HRnet_modal
-      isOpen={open}
-      onClose={() => setOpen(false)}
-      title="Delete employee"
-      message="This action cannot be undone"
-      showCancelButton={true}
-      cancelIcon={<Check size={16} />}
-      showConfirmButton={true}
-      confirmIcon={<Trash2 size={16} />}
-      confirmText="Delete"
-      confirmButtonColor="#dc2626"
-      cancelText="Keep"
-    />
-  );
-}
-```
-
----
-
-## Roadmap
-
-- Swipe to close on mobile
-- Dark mode
-- Animation presets
-- TypeScript definitions
-- Accessibility enhancements
-
----
-
-## Changelog
-
-See full release history here:
-
-[CHANGELOG.md](./CHANGELOG.md)
-
----
-
-## Contributing
-
-Pull requests and suggestions are welcome.
-
----
-
-## Package Info
-
-```bash
-npm view @delaroche/hrnet-modal
-```
-
----
-
-## Author
-
-Danick Delaroche
+- Automatic focus on opening
 
 ---
 

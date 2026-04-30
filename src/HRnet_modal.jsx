@@ -76,6 +76,8 @@ function HRnet_modal({
 
   overlayColor = "rgba(0, 0, 0, 0.25)",
   overlayClassName = "",
+  overlayPosition = "fixed",
+  mobileMode = "bottom-sheet",
   className = "",
   width = "520px",
   maxHeight = "85vh",
@@ -257,12 +259,15 @@ function HRnet_modal({
      */
     <div
       className={`${styles.modal__overlay} ${overlayClassName}`}
-      style={{ backgroundColor: overlayColor }}
+      style={{ backgroundColor: overlayColor, position: overlayPosition }}
       onClick={handleOverlayClick}
     >
       {/* Main modal container */}
       <div
-        className={`${styles.modal__container} ${className}`}
+        className={`
+          ${styles.modal__container} 
+          ${mobileMode === "bottom-sheet" ? styles.modal__container_sheet : ""} 
+          ${className}`}
         style={{
           "--modal-width": typeof width === "number" ? `${width}px` : width,
           "--modal-max-height":
@@ -286,7 +291,7 @@ function HRnet_modal({
         aria-describedby={message ? "modal-message" : undefined}
       >
         {/* Decorative drag handle */}
-        {showDragHandle && (
+        {showDragHandle && mobileMode === "bottom-sheet" && (
           <span
             className={styles.modal__dragHandle}
             aria-hidden="true"
@@ -392,6 +397,8 @@ function HRnet_modal({
  */
 HRnet_modal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
+  overlayPosition: PropTypes.oneOf(["fixed", "absolute"]),
+  mobileMode: PropTypes.oneOf(["modal", "bottom-sheet"]),
 
   title: PropTypes.string,
   message: PropTypes.string,

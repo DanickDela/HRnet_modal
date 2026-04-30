@@ -1,6 +1,29 @@
 # Changelog
 
-# Changelog
+## Changelog
+
+## [1.3.0] - 2026-04-30
+
+#### Added
+
+- `mobileMode` prop
+- `overlayPosition` prop
+- Bottom sheet mobile mode
+- Swipe down close gesture
+- Drag handle
+
+#### Improved
+
+- Better mobile UX
+- Better iPhone compatibility
+- Improved responsive layout
+
+#### Fixed
+
+- Hidden drag handle in centered mobile modal
+- Improved mobile sizing
+
+---
 
 ## [1.2.1] - 2026-04-29
 
